@@ -5,7 +5,6 @@
  */
 package clientwsperiodictable;
 
-import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.util.Scanner;
 import org.simpleframework.xml.Serializer;
@@ -58,23 +57,16 @@ public class ClientWSPeriodicTable {
                     
                     break;
             
-        //Get Atomos FALLA 
+        //Get Atomos  
             case 2: 
-
-                    //System.out.println("Átomos"+ getAtoms());
-                    //String salida3 = getAtoms(); 
-                    
-//                    if (!salida3.equals("<NewDataSet />")) {
-//                    String atoms = parseResponse(salida3, "</ElementName>");
-//                    System.out.println("Elemento: " + atoms);
-//                    }
-
-                   System.out.println("NO IMPLEMENTADO\n");
-                    
-                    
-                    
-                    
-                    
+                String source = getAtoms(); 
+                
+                Serializer serializer = new Persister(); 
+                NewDataSet all = serializer.read(NewDataSet.class, source);
+                for (Table tmp : all.getTabla()){
+                    System.out.println("ELEMENTO: " + tmp.getElementName());
+                }
+                
                     break;
                 
         //Get ElementsSymbol 
@@ -127,11 +119,7 @@ public class ClientWSPeriodicTable {
         net.webservicex.PeriodictableSoap port = service.getPeriodictableSoap();
         return port.getElementSymbol(elementName);
     }
-    
-    private static XStream getXstreamObject() { 
-        XStream xstream = new XStream(); 
-        return xstream; 
-    } 
+
     
     private static String parseResponse(String response, String endTag) {
         String beginTag = endTag.replace("/", "");
